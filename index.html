@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diamond Gym — Diamond Fitness Club Sportiv</title>
+<meta name="description" content="Diamond Fitness Club Sportiv — o sală de forță brută, fără compromisuri. Bară, box, cross training, antrenori. Prima ședință e gratuită.">
+<meta property="og:title" content="Diamond Gym — Fără presiune, nu există diamante">
+<meta property="og:description" content="O sală de forță autentică în Sportiv. Prima ședință e gratuită.">
+<meta property="og:image" content="https://picsum.photos/seed/dg-hero/1200/630.jpg">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" fill="%230A0A0B"/><path d="M14 8H34L44 20 24 44 4 20Z" fill="none" stroke="%23D9FF3D" stroke-width="3"/><path d="M20 20H28L24 44Z" fill="%23D9FF3D"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============ BAZĂ ============ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0b; --panel:#111113; --ink:#f2f1ea; --mut:#8b8b84;
+  --volt:#d9ff3d; --red:#ff6161;
+  --line:rgba(242,241,234,.14); --line2:rgba(242,241,234,.06);
+  --disp:'Archivo',sans-serif; --mono:'Space Mono',monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--disp);font-size:16px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body.lock{overflow:hidden}
+::selection{background:var(--volt);color:#0a0a0b}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;background:none;border:0;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--volt);outline-offset:3px}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#26262a;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--volt)}
+.mono{font-family:var(--mono)}
+.wrap{width:min(1280px,92vw);margin:0 auto}
+section{scroll-margin-top:92px}
+.section{padding:clamp(90px,11vw,150px) 0;position:relative}
+.ic{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic-f path{fill:currentColor;stroke:none}
+
+/* tăieturi de fațetă */
+.cut{clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
+.c1{clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,0 100%)}
+.c2{clip-path:polygon(18px 0,100% 0,100% 100%,0 100%,0 18px)}
+.c3{clip-path:polygon(0 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%)}
+.c4{clip-path:polygon(0 18px,18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%)}
+
+/* butoane */
+.btn{display:inline-flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:17px 26px;transition:background .25s,color .25s,border-color .25s}
+.btn--volt{background:var(--volt);color:#0a0a0b}
+.btn--volt:hover{background:var(--ink)}
+.btn--ghost{border:1px solid var(--line)}
+.btn--ghost:hover{border-color:var(--volt);color:var(--volt)}
+.btn--sm{padding:13px 18px;font-size:11px}
+.btn .ic{width:14px;height:14px;transition:transform .3s var(--ease)}
+.btn:hover .ic{transform:translate(3px,-3px)}
+
+/* granulație + progres + cursor */
+.noise{position:fixed;inset:0;z-index:3000;pointer-events:none;opacity:.055;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+.prog{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--volt);transform:scaleX(0);transform-origin:0 50%;z-index:1001}
+.cur-dot,.cur-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;opacity:0;display:none;transform:translate(-50%,-50%) rotate(45deg)}
+.cur-dot{width:7px;height:7px;background:var(--volt)}
+.cur-ring{width:34px;height:34px;border:1px solid rgba(217,255,61,.55);transition:width .25s,height .25s,background .25s}
+.cur-ring.big{width:58px;height:58px;background:rgba(217,255,61,.07)}
+@media (hover:hover) and (pointer:fine){.cur-dot,.cur-ring{display:block}}
+
+/* ============ NAV ============ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;border-bottom:1px solid transparent;transition:background .35s,border-color .35s}
+.nav.scrolled{background:rgba(10,10,11,.82);backdrop-filter:blur(14px);border-color:var(--line2)}
+.nav-in{width:min(1280px,92vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:76px;gap:20px}
+.logo{display:flex;align-items:center;gap:12px;font-weight:900;font-variation-settings:'wdth' 122;letter-spacing:.04em;font-size:19px}
+.logo svg{width:29px;height:29px;color:var(--volt)}
+.logo em{font-family:var(--mono);font-style:normal;font-size:9px;color:var(--volt);letter-spacing:.26em;align-self:flex-start;margin-top:2px}
+.nav-l{display:flex;gap:32px}
+.nav-l a{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);position:relative;padding:6px 0;transition:color .25s}
+.nav-l a:hover,.nav-l a.act{color:var(--ink)}
+.nav-l a.act::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--volt)}
+.nav-r{display:flex;align-items:center;gap:14px}
+.burger{display:none;flex-direction:column;gap:6px;width:44px;height:44px;border:1px solid var(--line);align-items:center;justify-content:center}
+.burger i{width:18px;height:2px;background:var(--ink);display:block;transition:.3s var(--ease)}
+.burger.on i:first-child{transform:translateY(4px) rotate(45deg)}
+.burger.on i:last-child{transform:translateY(-4px) rotate(-45deg)}
+.mmenu{position:fixed;inset:0;background:var(--bg);z-index:990;display:flex;flex-direction:column;justify-content:center;padding:0 8vw;opacity:0;pointer-events:none;transition:opacity .35s}
+.mmenu.on{opacity:1;pointer-events:auto}
+.mmenu a{font-weight:900;font-variation-settings:'wdth' 120;text-transform:uppercase;font-size:clamp(2rem,8.5vw,3.6rem);line-height:1.2;display:flex;gap:16px;align-items:baseline;opacity:0;transform:translateY(24px);transition:.55s var(--ease)}
+.mmenu a .mono{font-size:12px;color:var(--volt)}
+.mmenu.on a{opacity:1;transform:none}
+.mmenu.on a:nth-child(1){transition-delay:.06s}.mmenu.on a:nth-child(2){transition-delay:.12s}
+.mmenu.on a:nth-child(3){transition-delay:.18s}.mmenu.on a:nth-child(4){transition-delay:.24s}
+.mmenu.on a:nth-child(5){transition-delay:.3s}.mmenu.on a:nth-child(6){transition-delay:.36s}
+.m-foot{position:absolute;bottom:30px;left:8vw;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--mut)}
+.m-foot a{color:var(--volt);text-transform:none;font-size:12px}
+
+/* ============ HERO ============ */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:130px 0 90px;overflow:hidden}
+.h-guides{position:absolute;inset:0;display:flex;pointer-events:none}
+.h-guides i{flex:1;border-left:1px solid var(--line2)}
+.h-guides i:first-child{border-left:0}
+.h-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:clamp(2rem,5vw,4.5rem);align-items:center;position:relative}
+.h-meta{display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-size:11px;letter-spacing:.2em;color:var(--mut);margin-bottom:28px;text-transform:uppercase}
+.h-meta>svg{color:var(--volt)}
+.hsep{opacity:.35}
+.chip{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);padding:7px 12px;color:var(--ink);letter-spacing:.14em;font-size:10px;text-transform:uppercase}
+.chip i{width:7px;height:7px;background:var(--mut);transform:rotate(45deg);flex:none}
+.chip.open i{background:var(--volt);animation:pulse 1.5s infinite}
+.chip--lg{padding:12px 18px;font-size:12px}
+@keyframes pulse{50%{opacity:.2}}
+.hero-h{font-size:clamp(2.9rem,8vw,7.4rem);font-weight:900;font-variation-settings:'wdth' 116;text-transform:uppercase;line-height:.93;letter-spacing:-.015em}
+.hl{display:block;overflow:hidden;padding-bottom:.05em;margin-bottom:-.05em}
+.hl-in{display:inline-block;transform:translateY(112%);animation:rise 1s var(--ease) forwards;animation-delay:var(--d,0s)}
+@keyframes rise{to{transform:none}}
+.volt-em{color:var(--volt);font-style:italic}
+.hero-p{max-width:520px;color:var(--mut);font-size:clamp(1rem,1.3vw,1.12rem);line-height:1.65;margin:28px 0 34px}
+.hero-p strong{color:var(--ink);font-weight:600}
+.h-cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.h-visual{position:relative;perspective:1000px}
+.h-imgw{aspect-ratio:4/5;overflow:hidden;background:var(--panel)}
+.h-imgw img{width:100%;height:100%;object-fit:cover;transform:scale(1.07);transition:transform .6s var(--ease);filter:grayscale(.25) contrast(1.03)}
+.h-gemw{position:absolute;top:-46px;right:-30px;width:44%;aspect-ratio:1;transform-style:preserve-3d;transition:transform .2s ease-out;z-index:2}
+.h-gem{width:100%;height:100%;color:var(--volt);animation:bob 6.5s ease-in-out infinite;filter:drop-shadow(0 14px 34px rgba(0,0,0,.55))}
+@keyframes bob{50%{transform:translateY(-10px)}}
+.ffacet{animation:facet 3.2s ease-in-out infinite}
+@keyframes facet{0%,100%{opacity:1}50%{opacity:.3}}
+.h-vert{position:absolute;left:-34px;top:8%;writing-mode:vertical-rl;font-size:10px;letter-spacing:.34em;color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);margin-top:clamp(48px,7vw,80px)}
+.stat{padding:26px 22px 0 0}
+.stat+.stat{border-left:1px solid var(--line2);padding-left:24px}
+.stat-n{font-family:var(--mono);font-weight:700;font-size:clamp(1.6rem,2.6vw,2.4rem);display:flex;align-items:baseline;gap:7px}
+.stat-n em{font-style:normal;color:var(--volt);font-size:.5em;letter-spacing:.12em}
+.stat-l{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--mut);margin-top:9px;text-transform:uppercase}
+.h-scroll{position:absolute;bottom:26px;left:0;display:flex;align-items:flex-end;gap:14px;font-size:10px;letter-spacing:.34em;color:var(--mut)}
+.h-line{width:1px;height:52px;background:var(--line);position:relative;overflow:hidden}
+.h-line::after{content:"";position:absolute;left:0;top:-100%;width:100%;height:100%;background:var(--volt);animation:sline 2s var(--ease) infinite}
+@keyframes sline{to{top:100%}}
+@media(max-height:760px){.h-scroll{display:none}}
+
+/* ============ MARQUEE ============ */
+.marquee{border-block:1px solid var(--line);overflow:hidden;padding:20px 0}
+.mq-track{display:flex;width:max-content;animation:mq 30s linear infinite}
+.marquee:hover .mq-track{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.mq-half{display:flex;align-items:center;gap:44px;padding-right:44px}
+.mq-half span{font-weight:900;font-variation-settings:'wdth' 120;text-transform:uppercase;font-size:clamp(1.4rem,2.6vw,2.1rem);white-space:nowrap}
+.mq-half span.o{color:transparent;-webkit-text-stroke:1px rgba(242,241,234,.5)}
+.mq-half svg{width:15px;height:15px;color:var(--volt);flex:none}
+
+/* ============ ANTET SECȚIUNE ============ */
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding-top:22px;margin-bottom:clamp(40px,6vw,70px)}
+.sh-l{display:flex;align-items:flex-start;gap:18px}
+.sh-idx{font-family:var(--mono);color:var(--volt);font-size:12px;padding-top:10px}
+.sh-t{font-size:clamp(2.2rem,5.4vw,4.4rem);font-weight:900;font-variation-settings:'wdth' 118;text-transform:uppercase;line-height:.95;letter-spacing:-.01em}
+.sh-m{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--mut);text-align:right;max-width:280px;line-height:1.8;padding-bottom:8px;text-transform:uppercase}
+
+/* ============ CLUB ============ */
+.ab-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(2.5rem,6vw,5rem);align-items:start;margin-bottom:clamp(50px,7vw,90px)}
+.ab-big{font-size:clamp(1.5rem,2.9vw,2.4rem);font-weight:800;font-variation-settings:'wdth' 108;line-height:1.28;letter-spacing:-.01em}
+.ab-big .v{color:var(--volt)}
+.ab-sub{color:var(--mut);line-height:1.75;margin-top:26px;max-width:58ch}
+.ab-imgw{position:relative}
+.cutwrap{aspect-ratio:4/5;overflow:hidden;background:var(--panel)}
+.cutwrap img{width:100%;height:100%;object-fit:cover;filter:grayscale(.3) contrast(1.03)}
+.ab-cap{position:absolute;left:-12px;bottom:24px;background:var(--volt);color:#0a0a0b;font-size:10px;letter-spacing:.2em;padding:9px 14px;font-weight:700}
+.pr{display:grid;grid-template-columns:70px 1fr 1.3fr;gap:clamp(1rem,3vw,2.5rem);padding:26px 0;border-top:1px solid var(--line);align-items:baseline;transition:padding-left .35s var(--ease)}
+.pr:last-child{border-bottom:1px solid var(--line)}
+.pr:hover{padding-left:16px}
+.pr-n{font-family:var(--mono);color:var(--volt);font-size:13px}
+.pr-t{font-weight:900;font-variation-settings:'wdth' 118;text-transform:uppercase;font-size:clamp(1.15rem,2vw,1.55rem)}
+.pr-d{color:var(--mut);line-height:1.65;font-size:.98rem}
+
+/* ============ ANTRENAMENTE ============ */
+.plist{border-bottom:1px solid var(--line)}
+.flood{position:relative}
+.flood::before{content:"";position:absolute;inset:0;background:var(--volt);transform:scaleY(0);transform-origin:top;transition:transform .45s var(--ease);z-index:0}
+.flood:hover::before{transform:scaleY(1);transform-origin:bottom}
+.flood>*{position:relative;z-index:1;transition:color .3s}
+.prow{display:grid;grid-template-columns:64px 1fr auto;gap:clamp(1rem,3vw,2rem);align-items:center;padding:30px 12px;border-top:1px solid var(--line);cursor:pointer}
+.p-n{font-family:var(--mono);font-size:12px;color:var(--volt)}
+.p-t{font-weight:900;font-variation-settings:'wdth' 118;text-transform:uppercase;font-size:clamp(1.5rem,3.6vw,2.7rem);line-height:1}
+.p-d{color:var(--mut);font-size:.92rem;margin-top:7px;max-width:52ch;line-height:1.55}
+.p-r{display:flex;align-items:center;gap:22px}
+.p-tags{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--mut)}
+.p-arr{width:40px;height:40px;border:1px solid var(--line);display:grid;place-items:center;transition:.3s var(--ease)}
+.p-arr .ic{width:15px;height:15px}
+.prow:hover .p-n,.prow:hover .p-t{color:#0a0a0b}
+.prow:hover .p-d,.prow:hover .p-tags{color:rgba(10,10,11,.72)}
+.prow:hover .p-arr{border-color:#0a0a0b;color:#0a0a0b;transform:translate(3px,-3px)}
+.pfloat{position:fixed;z-index:900;width:min(280px,24vw);aspect-ratio:4/5;pointer-events:none;overflow:hidden;opacity:0;transform:translate(-50%,-56%) rotate(-6deg) scale(.9);transition:opacity .28s var(--ease),transform .28s var(--ease)}
+.pfloat.on{opacity:1;transform:translate(-50%,-56%) rotate(-3deg) scale(1)}
+.pfloat img{width:100%;height:100%;object-fit:cover}
+
+/* ============ GALERIE — STRIP LIVE FACEBOOK ============ */
+.fb-live-h{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.fb-live-n{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--mut)}
+.fb-strip{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 4px 16px;scrollbar-width:none}
+.fb-strip::-webkit-scrollbar{display:none}
+.fb-card{position:relative;flex:0 0 auto;scroll-snap-align:start;background:var(--panel);overflow:hidden;cursor:pointer;border:1px solid var(--line2);transition:border-color .3s,transform .35s var(--ease)}
+.fb-card:hover{border-color:var(--volt);transform:translateY(-4px)}
+.fb-card iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;background:#000}
+.fb-card--reel{width:min(300px,68vw);aspect-ratio:9/16}
+.fb-card--photo{width:min(560px,86vw);aspect-ratio:4/5}
+.fb-badge{position:absolute;left:10px;top:10px;z-index:2;display:flex;align-items:center;gap:7px;background:rgba(10,10,11,.85);color:var(--volt);font-size:10px;letter-spacing:.16em;padding:6px 10px;pointer-events:none;text-transform:uppercase}
+.fb-note{margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;line-height:1.9}
+.fb-note a{color:var(--volt)}
+.g-mosaic-t{margin:clamp(44px,6vw,72px) 0 20px;display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase}
+.g-mosaic-t::after{content:"";flex:1;height:1px;background:var(--line2)}
+
+/* ============ GALERIE — MOZAIC ============ */
+.g-grid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:96px;grid-auto-flow:dense;gap:10px}
+.g-item{position:relative;overflow:hidden;background:var(--panel);cursor:pointer;transition:opacity .35s}
+.g-grid:hover .g-item{opacity:.5}
+.g-grid .g-item:hover{opacity:1}
+.g-item img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease),filter .5s;filter:grayscale(.35) contrast(1.02)}
+.g-item:hover img{transform:scale(1.07);filter:none}
+.g-item::after{content:"";position:absolute;inset:0;border:1px solid transparent;transition:border-color .3s;pointer-events:none}
+.g-item:hover::after{border-color:var(--volt)}
+.g-tag{position:absolute;left:10px;bottom:10px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;background:rgba(10,10,11,.8);color:var(--volt);padding:5px 9px;opacity:0;transform:translateY(6px);transition:.3s var(--ease)}
+.g-item:hover .g-tag{opacity:1;transform:none}
+.gw1{grid-column:span 1}.gw2{grid-column:span 2}.gw3{grid-column:span 3}
+.gh2{grid-row:span 2}.gh3{grid-row:span 3}.gh4{grid-row:span 4}
+.g-more{margin-top:36px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.g-note{font-size:11px;letter-spacing:.18em;color:var(--mut);text-transform:uppercase}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:1200;background:rgba(8,8,9,.95);backdrop-filter:blur(8px);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s}
+.lb.on{opacity:1;pointer-events:auto}
+.lb-top,.lb-bot{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px clamp(16px,4vw,44px)}
+.lb-top{border-bottom:1px solid var(--line2)}
+.lb-bot{border-top:1px solid var(--line2)}
+.lb-cnt{font-family:var(--mono);font-size:12px;letter-spacing:.24em;color:var(--volt)}
+.lb-mid{flex:1;display:grid;place-items:center;padding:22px;min-height:0}
+.lb-mid img{max-width:min(1000px,100%);max-height:100%;object-fit:contain;border:1px solid var(--line2)}
+.lb-emb{display:none;height:100%;max-width:100%;background:#000}
+.lb-emb.on{display:block}
+.lb-emb iframe{width:100%;height:100%;border:0}
+.lb-emb--reel{aspect-ratio:9/16}
+.lb-emb--photo{width:min(780px,100%)}
+.lb-cap{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
+.lb-cap a{color:var(--volt)}
+.lb-nav{display:flex;gap:10px}
+.icbtn{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;transition:.25s}
+.icbtn:hover{border-color:var(--volt);color:var(--volt)}
+
+/* ============ PROGRAM ============ */
+.srows{border-bottom:1px solid var(--line)}
+.srow{display:grid;grid-template-columns:1fr auto 1.4fr;gap:2rem;align-items:center;padding:26px 12px;border-top:1px solid var(--line);position:relative}
+.srow.today::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--volt)}
+.s-day{font-weight:900;font-variation-settings:'wdth' 118;text-transform:uppercase;font-size:clamp(1.2rem,2.4vw,1.7rem)}
+.td-tag{display:none;font-size:9px;color:#0a0a0b;background:var(--volt);padding:3px 7px;letter-spacing:.16em;margin-left:12px;vertical-align:middle}
+.srow.today .td-tag{display:inline-block}
+.s-h{font-size:13px;letter-spacing:.08em}
+.s-f{color:var(--mut);font-size:.95rem;text-align:right}
+.s-live{margin-top:32px}
+
+/* ============ ABONAMENTE ============ */
+.jrows{border-bottom:1px solid var(--line)}
+.jrow{display:grid;grid-template-columns:1fr auto auto;gap:clamp(1.2rem,4vw,3rem);align-items:center;padding:34px 12px;border-top:1px solid var(--line);cursor:pointer}
+.j-name{font-weight:900;font-variation-settings:'wdth' 118;text-transform:uppercase;font-size:clamp(1.5rem,3.4vw,2.5rem)}
+.j-tag{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--mut);border:1px solid var(--line);padding:4px 8px;margin-left:14px;vertical-align:middle}
+.j-tag--hot{color:#0a0a0b;background:var(--volt);border-color:var(--volt)}
+.j-feat{color:var(--mut);font-size:.95rem;margin-top:7px}
+.dsep{display:inline-block;width:5px;height:5px;background:var(--volt);transform:rotate(45deg);margin:0 12px;vertical-align:middle;opacity:.85}
+.j-price{font-family:var(--mono);font-weight:700;font-size:clamp(1.5rem,3vw,2.2rem);white-space:nowrap}
+.j-price em{font-style:normal;font-size:.48em;color:var(--mut)}
+.jrow:hover .j-name,.jrow:hover .j-price{color:#0a0a0b}
+.jrow:hover .j-feat,.jrow:hover .j-price em{color:rgba(10,10,11,.7)}
+.jrow:hover .j-tag{color:rgba(10,10,11,.75);border-color:rgba(10,10,11,.35)}
+.jrow:hover .j-tag--hot{color:#0a0a0b}
+.jrow:hover .btn--volt{background:#0a0a0b;color:var(--volt)}
+.jrow:hover .btn--ghost{border-color:rgba(10,10,11,.4);color:#0a0a0b}
+.j-note{margin-top:28px;font-size:11px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase}
+.j-note a{color:var(--volt);border-bottom:1px solid transparent}
+.j-note a:hover{border-color:var(--volt)}
+
+/* ============ CONTACT ============ */
+.ct-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(2.5rem,6vw,5rem)}
+.ct-h{font-size:clamp(2.2rem,5.4vw,4.2rem);font-weight:900;font-variation-settings:'wdth' 118;text-transform:uppercase;line-height:.98;letter-spacing:-.01em}
+.ct-list{margin-top:38px;border-top:1px solid var(--line)}
+.ct-row{display:flex;align-items:center;gap:16px;padding:18px 4px;border-bottom:1px solid var(--line);transition:.25s var(--ease);font-size:.98rem}
+a.ct-row:hover{color:var(--volt);padding-left:14px}
+.ct-row .ic{color:var(--volt);width:17px;height:17px}
+.ct-row .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--mut);width:88px;flex:none}
+.ct-row .go{margin-left:auto;width:14px;height:14px;opacity:.5}
+.ct-lbl{font-size:10px;letter-spacing:.26em;color:var(--volt)}
+.ct-hours{margin-top:18px;font-size:12px;letter-spacing:.12em}
+.ct-hours>div{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line2)}
+.ct-hours span:first-child{color:var(--mut)}
+.ct-cta{margin-top:28px}
+.ct-note{display:block;margin-top:18px;font-size:11px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase}
+
+/* ============ FOOTER ============ */
+footer{border-top:1px solid var(--line);padding-top:60px;overflow:hidden}
+.f-top{display:flex;justify-content:space-between;gap:34px;flex-wrap:wrap;margin-bottom:60px}
+.f-col{font-size:12px;line-height:2;letter-spacing:.1em;color:var(--mut)}
+.f-lbl{display:block;color:var(--volt);font-size:10px;letter-spacing:.26em;margin-bottom:6px}
+.f-link{display:inline-flex;align-items:center;gap:8px;color:var(--ink)}
+.f-link:hover{color:var(--volt)}
+.f-link .ic{width:12px;height:12px}
+.f-crop{overflow:hidden}
+.f-word{font-weight:900;font-variation-settings:'wdth' 122;font-size:clamp(4rem,16vw,15rem);line-height:.78;text-transform:uppercase;letter-spacing:-.02em;color:transparent;-webkit-text-stroke:1.5px rgba(242,241,234,.28);text-align:center;cursor:pointer;user-select:none;transform:translateY(8%);transition:.4s}
+.f-word:hover{-webkit-text-stroke-color:var(--volt);color:rgba(217,255,61,.05)}
+.f-bar{border-top:1px solid var(--line2);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:18px 0 22px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--mut);text-transform:uppercase}
+
+/* ============ MODAL / TOAST ============ */
+.overlay{position:fixed;inset:0;z-index:1300;background:rgba(8,8,9,.7);backdrop-filter:blur(10px);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px}
+.overlay.on{opacity:1;pointer-events:auto}
+.modal{width:min(480px,100%);background:var(--panel);border:1px solid var(--line);padding:34px;position:relative;transform:translateY(18px) scale(.98);transition:transform .35s var(--ease)}
+.overlay.on .modal{transform:none}
+.m-x{position:absolute;top:14px;right:14px;width:38px;height:38px;border:1px solid var(--line);display:grid;place-items:center;transition:.25s}
+.m-x:hover{border-color:var(--volt);color:var(--volt)}
+.m-eyebrow{font-size:10px;letter-spacing:.24em;color:var(--volt);display:flex;align-items:center;gap:10px;text-transform:uppercase}
+.m-title{font-weight:900;font-variation-settings:'wdth' 118;text-transform:uppercase;font-size:1.7rem;margin:12px 0 26px;line-height:1.05}
+.fld{display:block;margin-bottom:20px}
+.fld span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--mut);margin-bottom:8px}
+.fld input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:14px;padding:10px 2px;transition:border-color .25s}
+.fld input:focus{outline:0;border-color:var(--volt)}
+.fld input.bad{border-color:var(--red)}
+.ferr{display:block;color:var(--red);font-size:10px;letter-spacing:.08em;margin-top:7px;min-height:13px;font-style:normal}
+#mSend{width:100%;justify-content:center}
+.m-note{font-size:11px;color:var(--mut);line-height:1.9;margin-top:16px;letter-spacing:.04em}
+.m-note a{color:var(--volt);border-bottom:1px solid transparent}
+.m-note a:hover{border-color:var(--volt)}
+#mDone{display:none}
+#mDone.on{display:block}
+.done-ic{width:52px;height:52px;border:1px solid var(--volt);color:var(--volt);display:grid;place-items:center;transform:rotate(45deg);margin:8px 0 20px}
+.done-ic .ic{transform:rotate(-45deg);width:22px;height:22px}
+.m-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.toast{position:fixed;left:22px;bottom:22px;z-index:1400;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--volt);padding:14px 18px;font-family:var(--mono);font-size:12px;transform:translateY(16px);opacity:0;pointer-events:none;transition:.35s var(--ease);max-width:min(380px,82vw)}
+.toast.on{transform:none;opacity:1}
+
+/* ============ REVELAȚII ============ */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:1060px){
+  .nav-l{display:none}
+  .burger{display:flex}
+  .h-grid{grid-template-columns:1fr;gap:56px}
+  .h-visual{max-width:520px}
+  .h-vert{display:none}
+  .h-gemw{top:-34px;right:-4px;width:38%}
+  .ab-grid{grid-template-columns:1fr}
+  .ab-imgw{max-width:440px}
+  .g-grid{grid-template-columns:repeat(4,1fr)}
+  .gw3{grid-column:span 2}
+  .gh4{grid-row:span 3}
+  .ct-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr 1fr}
+  .stat+.stat{border-left:0;padding-left:0}
+  .stat:nth-child(even){border-left:1px solid var(--line2);padding-left:18px}
+  .g-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:64px;gap:8px}
+  .gw2,.gw3{grid-column:span 2}
+  .prow{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:24px 8px}
+  .p-r{width:100%;justify-content:space-between}
+  .p-tags{display:none}
+  .srow{grid-template-columns:1fr;gap:7px}
+  .s-f{text-align:left}
+  .jrow{grid-template-columns:1fr;gap:14px;align-items:flex-start}
+  .sh{flex-direction:column;align-items:flex-start}
+  .sh-m{text-align:left;padding-bottom:0}
+  .lb-cap{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .rv,.hl-in{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- set de iconițe -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-gem" viewBox="0 0 48 48"><path d="M14 8H34L44 20 24 44 4 20Z M4 20H44 M14 8 20 20H28L34 8 M20 20 24 44 28 20"/></symbol>
+  <symbol id="i-arr" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-chl" viewBox="0 0 24 24"><path d="M14 6l-6 6 6 6"/></symbol>
+  <symbol id="i-chr" viewBox="0 0 24 24"><path d="M10 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.2v13.6L19 12Z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.3-6.5-10a6.5 6.5 0 1 1 13 0c0 4.7-6.5 10-6.5 10Z"/><circle cx="12" cy="10.6" r="2.2"/></symbol>
+  <symbol id="i-tel" viewBox="0 0 24 24"><path d="M5 4h3.2l1.6 4-2 1.6a12.8 12.8 0 0 0 6.6 6.6L16 14.2l4 1.6V19a1.8 1.8 0 0 1-2 1.8A17 17 0 0 1 3.2 6 1.8 1.8 0 0 1 5 4Z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="1"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path d="M13.4 9H16l-.5 3h-2.1v9h-3v-9H8V9h2.4V7.1c0-2.2 1.3-3.6 3.6-3.6H16v3h-1.4c-.8 0-1.2.4-1.2 1.2V9Z"/></symbol>
+</svg>
+
+<div class="noise" aria-hidden="true"></div>
+<div class="prog" id="prog" aria-hidden="true"></div>
+<div class="cur-dot" aria-hidden="true"></div>
+<div class="cur-ring" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="logo" href="#top" data-cur aria-label="Diamond Gym — acasă">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 8H34L44 20 24 44 4 20Z M4 20H44 M14 8 20 20H28L34 8 M20 20 24 44 28 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path class="ffacet" d="M20 20H28L24 44Z" fill="currentColor"/></svg>
+      <span>DIAMOND<em>GYM</em></span>
+    </a>
+    <nav class="nav-l" aria-label="Principal">
+      <a href="#club">Club</a><a href="#training">Antrenamente</a><a href="#gallery">Galerie</a><a href="#schedule">Program</a><a href="#join">Abonamente</a>
+    </nav>
+    <div class="nav-r">
+      <a class="btn btn--volt btn--sm cut" href="#join">Înscrie-te</a>
+      <button class="burger" id="burger" aria-label="Deschide meniul" aria-expanded="false"><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="mmenu" id="mmenu">
+  <a href="#club"><span class="mono">01</span>Club</a>
+  <a href="#training"><span class="mono">02</span>Antrenamente</a>
+  <a href="#gallery"><span class="mono">03</span>Galerie</a>
+  <a href="#schedule"><span class="mono">04</span>Program</a>
+  <a href="#join"><span class="mono">05</span>Abonamente</a>
+  <a href="#contact"><span class="mono">06</span>Contact</a>
+  <div class="m-foot">DIAMOND FITNESS CLUB · <a href="https://www.facebook.com/DiamondFitnessClubSportiv/" target="_blank" rel="noopener">FACEBOOK</a></div>
+</div>
+
+<main>
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="h-guides" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="wrap" style="position:relative">
+    <div class="h-grid">
+      <div>
+        <div class="h-meta mono rv" style="--d:.05s">
+          <svg class="ic" style="width:16px;height:16px"><use href="#i-gem"/></svg>
+          <span>Diamond Fitness Club</span><span class="hsep">/</span><span>Sportiv</span>
+          <span class="chip mono" id="openChip"><i></i><span id="openTxt">Verific programul…</span></span>
+        </div>
+        <h1 class="hero-h">
+          <span class="hl"><span class="hl-in" style="--d:.15s">Fără presiune,</span></span>
+          <span class="hl"><span class="hl-in" style="--d:.28s">nu apar <em class="volt-em">diamante</em>.</span></span>
+        </h1>
+        <p class="hero-p rv" style="--d:.45s">O sală de forță profesională, fără compromisuri, în <strong>Resultate</strong>. Aparate și antrenori care țin la tine — plus o comunitate care te trage dincolo de limitele tale. <strong>Prima ta ședință e gratuită.</strong></p>
+        <div class="h-cta rv" style="--d:.55s">
+          <button class="btn btn--volt cut" data-plan="Ședință de probă gratuită" data-cur>Programează-te gratuit <svg class="ic"><use href="#i-up"/></svg></button>
+          <a class="btn btn--ghost" href="#gallery" data-cur>Vezi sala <svg class="ic"><use href="#i-arr"/></svg></a>
+        </div>
+      </div>
+      <div class="h-visual rv" style="--d:.35s">
+        <!-- EDIT: înlocuiește cu o fotografie reală a clubului, ex. img/hero.jpg -->
+        <div class="h-imgw c1"><img id="heroImg" src="https://picsum.photos/seed/dg-hero/1000/1250.jpg" alt="În interiorul Diamond Fitness Club — sala principală de antrenament" fetchpriority="high"></div>
+        <div class="h-gemw" id="gemWrap" aria-hidden="true">
+          <svg class="h-gem" viewBox="0 0 48 48"><path d="M14 8H34L44 20 24 44 4 20Z M4 20H44 M14 8 20 20H28L34 8 M20 20 24 44 28 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path class="ffacet" d="M20 20H28L24 44Z" fill="currentColor"/></svg>
+        </div>
+        <span class="h-vert mono" aria-hidden="true">FAȚETĂ 001 — SALA</span>
+      </div>
+    </div>
+    <div class="stats rv" style="--d:.65s">
+      <div class="stat"><span class="stat-n"><span class="num" data-to="12">0</span><em>ANI</em></span><span class="stat-l">performantă</span></div>
+      <div class="stat"><span class="stat-n"><span class="num" data-to="1400" data-suf="+">0</span></span><span class="stat-l">Membri activi</span></div>
+      <div class="stat"><span class="stat-n"><span class="num" data-to="850">0</span><em>M²</em></span><span class="stat-l">Sală de antrenament</span></div>
+      <div class="stat"><span class="stat-n"><span class="num" data-to="9">0</span><em>PRO</em></span><span class="stat-l">Antrenori în echipă</span></div>
+    </div>
+    <div class="h-scroll mono" aria-hidden="true"><span>DE ACTIVITATE</span><span class="h-line"></span></div>
+  </div>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track">
+    <div class="mq-half">
+      <span>Forță</span><svg class="ic"><use href="#i-gem"/></svg>
+      <span class="o">Condiție fizică</span><svg class="ic"><use href="#i-gem"/></svg>
+      <span>Combat</span><svg class="ic"><use href="#i-gem"/></svg>
+      <span class="o">Mobilitate</span><svg class="ic"><use href="#i-gem"/></svg>
+      <span>Disciplină</span><svg class="ic"><use href="#i-gem"/></svg>
+      <span class="o">Comunitate</span><svg class="ic"><use href="#i-gem"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CLUB ================= -->
+<section class="section" id="club">
+  <div class="wrap">
+    <header class="sh rv">
+      <div class="sh-l"><span class="sh-idx">(01)</span><h2 class="sh-t">Clubul</h2></div>
+      <p class="sh-m mono">Unde effortul devine structură — făcut de sportivi, pentru sportivi.</p>
+    </header>
+    <div class="ab-grid">
+      <div class="rv">
+        <p class="ab-big">Cele mai multe săli vând confort. Noi vindem exact opusul — <span class="v">o sală care mereu cere ceva de la tine</span> și o încăpere care îți oferă mijloacele necesare.</p>
+        <p class="ab-sub">Diamond Fitness Club s-a deschis cu o singură idee: taie tot ce nu te face mai puternic: fără scurtături. Doar cretă pe bare, programare onestă și oameni care se antrenează lângă tine. Fie că e prima ta genoflexiune sau nu, standardul e același: <span style="color:var(--ink)">apari, muncești, progresezi.</span></p>
+      </div>
+      <div class="ab-imgw rv" style="--d:.15s">
+        <!-- EDIT: înlocuiește cu o fotografie reală a clubului, ex. img/club.jpg -->
+        <div class="cutwrap c2"><img src="https://picsum.photos/seed/dg-club/1000/1250.jpg" alt="Membri antrenându-se la Diamond Fitness Club" loading="lazy" decoding="async"></div>
+        <span class="ab-cap mono">SALA A — ZI GREA</span>
+      </div>
+    </div>
+    <div>
+      <div class="pr rv"><span class="pr-n">/ 01</span><h3 class="pr-t">Prezența</h3><p class="pr-d">Jumătate din fiecare rezultat e prezența. Protejăm o cultură în care ușa e partea cea mai grea — odată intrat, sala te poartă mai departe.</p></div>
+      <div class="pr rv" style="--d:.08s"><span class="pr-n">/ 02</span><h3 class="pr-t">Tehnica pe primul loc</h3><p class="pr-d">Fiecare ridicare e corectată, fiecare repetare e numărată. Greutatea vine după tehnică — niciodată invers.</p></div>
+      <div class="pr rv" style="--d:.16s"><span class="pr-n">/ 03</span><h3 class="pr-t">Câștigă-ți avantajul</h3><p class="pr-d">Progresul aici se măsoară, se notează și se sărbătorește — de la prima ta tracțiune la prima ta competiție.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ANTRENAMENTE ================= -->
+<section class="section" id="training">
+  <div class="wrap">
+    <header class="sh rv">
+      <div class="sh-l"><span class="sh-idx">(02)</span><h2 class="sh-t">Antrenamente</h2></div>
+      <p class="sh-m mono">Cinci drumuri de intrare. Treci cu mouse-ul peste o disciplină — apasă ca să rezervi o probă.</p>
+    </header>
+    <div class="plist">
+      <div class="prow flood rv" data-img="https://picsum.photos/seed/dg-strength/800/1000.jpg" data-plan="Probă — Forță &amp; Putere" data-cur tabindex="0">
+        <span class="p-n">01</span>
+        <div><h3 class="p-t">Forță &amp; Putere</h3><p class="p-d">Genuflexiuni, împins la bancă, deadlift, împins. Lucru cu bara, sub îndrumarea antrenorului, pe platforme dedicate — de la bara goală până la discuri de competiție.</p></div>
+        <div class="p-r"><span class="p-tags">BARĂ · SUPORTURI · PLATFORME</span><span class="p-arr"><svg class="ic"><use href="#i-up"/></svg></span></div>
+      </div>
+      <div class="prow flood rv" style="--d:.06s" data-img="https://picsum.photos/seed/dg-boxing/800/1000.jpg" data-plan="Probă — Combat &amp; Box" data-cur tabindex="0">
+        <span class="p-n">02</span>
+        <div><h3 class="p-t">Combat &amp; Box</h3><p class="p-d">Lucru la sac, joc de picioare și condiție de luptător. Transpirație onestă, rundă după rundă.</p></div>
+        <div class="p-r"><span class="p-tags">SACI · RING · LABE</span><span class="p-arr"><svg class="ic"><use href="#i-up"/></svg></span></div>
+      </div>
+      <div class="prow flood rv" style="--d:.12s" data-img="https://picsum.photos/seed/dg-engine/800/1000.jpg" data-plan="Probă — Motricitate &amp; Cross Training" data-cur tabindex="0">
+        <span class="p-n">03</span>
+        <div><h3 class="p-t">Motricitate &amp; Cross Training</h3><p class="p-d">Circuite, sănii, vâsle — o formă fizică pe care o simți și în afara sălii.</p></div>
+        <div class="p-r"><span class="p-tags">Motricitate · WOD · SĂNII</span><span class="p-arr"><svg class="ic"><use href="#i-up"/></svg></span></div>
+      </div>
+      <div class="prow flood rv" style="--d:.18s" data-img="https://picsum.photos/seed/dg-mobility/800/1000.jpg" data-plan="Probă — Mobilitate &amp; Recuperare" data-cur tabindex="0">
+        <span class="p-n">04</span>
+        <div><h3 class="p-t">Mobilitate &amp; Recuperare</h3><p class="p-d">Mobilitate structurată, core și lucru cu respirația — ca să te poți antrena la greu și peste zeci de ani.</p></div>
+        <div class="p-r"><span class="p-tags">ÎNTINDERI · CORE · RESPIRAȚIE</span><span class="p-arr"><svg class="ic"><use href="#i-up"/></svg></span></div>
+      </div>
+      <div class="prow flood rv" style="--d:.24s" data-img="https://picsum.photos/seed/dg-coach/800/1000.jpg" data-plan="Ședință de antrenament personal" data-cur tabindex="0">
+        <span class="p-n">05</span>
+        <div><h3 class="p-t">Antrenament Personal</h3><p class="p-d">Un antrenor, un plan, zero ghiciri. Evaluare, programare și verificări săptămânale.</p></div>
+        <div class="p-r"><span class="p-tags">1-LA-1 · PLAN · EVALUARE</span><span class="p-arr"><svg class="ic"><use href="#i-up"/></svg></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="pfloat c1" id="pfloat" aria-hidden="true"><img src="https://picsum.photos/seed/dg-strength/800/1000.jpg" alt=""></div>
+</section>
+
+<!-- ================= GALERIE ================= -->
+<section class="section" id="gallery">
+  <div class="wrap">
+    <header class="sh rv">
+      <div class="sh-l"><span class="sh-idx">(03)</span><h2 class="sh-t">Galerie</h2></div>
+      <p class="sh-m mono">Sus: media live de pe Facebook, încărcată instant. Jos: arhiva sălii — 20 de fațete.</p>
+    </header>
+
+    <!-- ---- LIVE DE PE FACEBOOK (se încarcă imediat la deschiderea paginii) ---- -->
+    <div class="fb-live rv">
+      <div class="fb-live-h">
+        <span class="chip open mono"><i></i>LIVE DE PE FACEBOOK</span>
+        <span class="fb-live-n">1 FOTOGRAFIE · 6 REELS</span>
+      </div>
+      <div class="fb-strip" id="fbStrip"></div>
+      <p class="fb-note">Postările se încarcă direct de pe Facebook, imediat ce pagina se deschide. Apasă o carte pentru ecran mare. Dacă o publicație nu apare, o găsești <a href="https://www.facebook.com/DiamondFitnessClubSportiv/" target="_blank" rel="noopener">pe pagina noastră</a>.</p>
+    </div>
+
+    <!-- ---- ARHIVA: 20 DE FAȚETE ---- -->
+    <h3 class="g-mosaic-t rv">Arhiva — 20 de fațete</h3>
+    <div class="g-grid" id="gGrid"></div>
+    <div class="g-more rv">
+      <p class="g-note mono">Fotografiile descărcate de pe Facebook rămân cele mai rapide și stabile — vezi comentariul din cod.</p>
+      <a class="btn btn--ghost" href="https://www.facebook.com/DiamondFitnessClubSportiv/" target="_blank" rel="noopener" data-cur><svg class="ic ic-f" style="width:15px;height:15px"><use href="#i-fb"/></svg> Vezi tot pe Facebook</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MARQUEE 2 ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track">
+    <div class="mq-half">
+      <span class="o">Fără scurtături</span><svg class="ic"><use href="#i-gem"/></svg>
+      <span>Fără scuze</span><svg class="ic"><use href="#i-gem"/></svg>
+      <span class="o">Doar muncă</span><svg class="ic"><use href="#i-gem"/></svg>
+      <span>În fiecare zi</span><svg class="ic"><use href="#i-gem"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PROGRAM ================= -->
+<section class="section" id="schedule">
+  <div class="wrap">
+    <header class="sh rv">
+      <div class="sh-l"><span class="sh-idx">(04)</span><h2 class="sh-t">Program</h2></div>
+      <p class="sh-m mono">Ora locală, în direct — indicatorul știe dacă suntem deschiși.</p>
+    </header>
+    <div class="srows">
+      <div class="srow rv" data-days="1,2,3,4,5">
+        <h3 class="s-day">Luni – Vineri<span class="td-tag mono">AZI</span></h3>
+        <span class="s-h mono">06:00 — 23:00</span>
+        <p class="s-f">Toată sala · clase dimineața &amp; seara · open gym toată ziua</p>
+      </div>
+      <div class="srow rv" style="--d:.08s" data-days="6">
+        <h3 class="s-day">Sâmbătă<span class="td-tag mono">AZI</span></h3>
+        <span class="s-h mono">08:00 — 21:00</span>
+        <p class="s-f">Open gym · WOD de echipă 10:00 · bară pentru începători 12:00</p>
+      </div>
+      <div class="srow rv" style="--d:.16s" data-days="0">
+        <h3 class="s-day">Duminică<span class="td-tag mono">AZI</span></h3>
+        <span class="s-h mono">08:00 — 20:00</span>
+        <p class="s-f">Open gym · ședință de mobilitate &amp; recuperare 11:00</p>
+      </div>
+    </div>
+    <div class="s-live rv"><span class="chip chip--lg mono" id="openChip2"><i></i><span id="openTxt2"></span></span></div>
+  </div>
+</section>
+
+<!-- ================= ABONAMENTE ================= -->
+<section class="section" id="join">
+  <div class="wrap">
+    <header class="sh rv">
+      <div class="sh-l"><span class="sh-idx">(05)</span><h2 class="sh-t">Abonamente</h2></div>
+      <p class="sh-m mono">Fără taxe de înscriere. Fără nimic ascuns. Renunți oricând.</p>
+    </header>
+    <div class="jrows">
+      <!-- EDIT: ajustează prețurile / moneda după tarifele locale -->
+      <div class="jrow flood rv" data-plan="Intrare unică" data-cur tabindex="0" role="button" aria-label="Alege intrarea unică">
+        <div><h3 class="j-name">Intrare Unică<span class="j-tag mono">O VIZITĂ</span></h3><p class="j-feat">Toate zonele<i class="dsep"></i>O clasă inclusă<i class="dsep"></i>Fără obligații</p></div>
+        <span class="j-price">€8<em> / ZI</em></span>
+        <span class="btn btn--ghost btn--sm">Alege</span>
+      </div>
+      <div class="jrow flood rv" style="--d:.08s" data-plan="Abonament lunar" data-cur tabindex="0" role="button" aria-label="Alege abonamentul lunar">
+        <div><h3 class="j-name">Lunar<span class="j-tag j-tag--hot mono">CEL MAI POPULAR</span></h3><p class="j-feat">Sală și clase nelimitate<i class="dsep"></i>Dulap personal<i class="dsep"></i>Revizuirea planului la fiecare 4 săptămâni</p></div>
+        <span class="j-price">€39<em> / LUNĂ</em></span>
+        <span class="btn btn--volt btn--sm cut">Alege</span>
+      </div>
+      <div class="jrow flood rv" style="--d:.16s" data-plan="Abonament anual" data-cur tabindex="0" role="button" aria-label="Alege abonamentul anual">
+        <div><h3 class="j-name">Anual<span class="j-tag mono">CEA MAI BUNĂ OFERTĂ</span></h3><p class="j-feat">Tot ce include Lunar<i class="dsep"></i>2 luni gratuite<i class="dsep"></i>3 antrenamente personale</p></div>
+        <span class="j-price">€390<em> / AN</em></span>
+        <span class="btn btn--ghost btn--sm">Alege</span>
+      </div>
+    </div>
+    <p class="j-note mono rv">Prețurile în euro sunt orientative — <a href="#contact">întreabă la recepție</a> pentru tarifele locale și reducerile pentru studenți.</p>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <header class="sh rv">
+      <div class="sh-l"><span class="sh-idx">(06)</span><h2 class="sh-t">Găsește-ne</h2></div>
+      <p class="sh-m mono">Veniți fără programare — prima ședință e mereu gratuită.</p>
+    </header>
+    <div class="ct-grid">
+      <div class="rv">
+        <h3 class="ct-h">Vino să vezi<br><em class="volt-em">sala.</em></h3>
+        <div class="ct-list">
+          <a class="ct-row" href="https://www.facebook.com/DiamondFitnessClubSportiv/" target="_blank" rel="noopener" data-cur>
+            <svg class="ic ic-f"><use href="#i-fb"/></svg><span class="lbl">FACEBOOK</span>
+            <span>Diamond Fitness Club Sportiv — fotografii și noutăți zilnice</span>
+            <svg class="ic go"><use href="#i-up"/></svg>
+          </a>
+          <a class="ct-row" href="mailto:hello@diamondgym.online" data-cur>
+            <svg class="ic"><use href="#i-mail"/></svg><span class="lbl">EMAIL</span>
+            <span>hello@diamondgym.online</span>
+          </a>
+          <!-- EDIT: numărul real de telefon -->
+          <a class="ct-row" href="tel:+400000000000" data-cur>
+            <svg class="ic"><use href="#i-tel"/></svg><span class="lbl">TELEFON</span>
+            <span>+40 000 000 000</span>
+          </a>
+          <!-- EDIT: adresa reală -->
+          <div class="ct-row">
+            <svg class="ic"><use href="#i-pin"/></svg><span class="lbl">ADRESĂ</span>
+            <span>Sportiv — indicații complete, fixate pe pagina noastră de Facebook</span>
+          </div>
+        </div>
+      </div>
+      <div class="rv" style="--d:.12s">
+        <span class="ct-lbl mono">PROGRAM</span>
+        <div class="ct-hours mono">
+          <div><span>LUN — VIN</span><span>06:00 — 23:00</span></div>
+          <div><span>SÂM</span><span>08:00 — 21:00</span></div>
+          <div><span>DUM</span><span>08:00 — 20:00</span></div>
+        </div>
+        <button class="btn btn--volt cut ct-cta" data-plan="Ședință de probă gratuită" data-cur>Programează-te gratuit <svg class="ic"><use href="#i-up"/></svg></button>
+        <span class="ct-note mono">Nu e nevoie de programare — doar vino în sală.</span>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="f-top mono rv">
+      <div class="f-col"><span class="f-lbl">CLUB</span><p>Diamond Fitness Club Sportiv<br>diamondgym.online</p></div>
+      <div class="f-col"><span class="f-lbl">PROGRAM</span><p>Lun–Vin 06–23<br>Sâm–Dum 08–21</p></div>
+      <div class="f-col"><span class="f-lbl">URMĂREȘTE-NE</span><p><a class="f-link" href="https://www.facebook.com/DiamondFitnessClubSportiv/" target="_blank" rel="noopener">Facebook <svg class="ic"><use href="#i-up"/></svg></a></p></div>
+    </div>
+    <div class="f-crop">
+      <div class="f-word" id="toTop" role="button" tabindex="0" title="Înapoi sus" aria-label="Înapoi sus">Diamond</div>
+    </div>
+    <div class="f-bar">
+      <span>© <span id="yr"></span> Diamond Fitness Club</span>
+      <span>Fără presiune — nu există diamante</span>
+      <span>Găzduit pe GitHub Pages</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= LIGHTBOX ================= -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Vizualizator media">
+  <div class="lb-top">
+    <span class="lb-cnt" id="lbCnt">01 / 07</span>
+    <button class="icbtn" id="lbClose" aria-label="Închide vizualizatorul" data-cur><svg class="ic"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="lb-mid">
+    <img id="lbImg" alt="">
+    <div class="lb-emb" id="lbEmb">
+      <iframe id="lbFrame" title="Media Facebook" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  </div>
+  <div class="lb-bot">
+    <span class="lb-cap" id="lbCap"></span>
+    <div class="lb-nav">
+      <button class="icbtn" id="lbPrev" aria-label="Anterioara" data-cur><svg class="ic"><use href="#i-chl"/></svg></button>
+      <button class="icbtn" id="lbNext" aria-label="Următoarea" data-cur><svg class="ic"><use href="#i-chr"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL REZERVARE ================= -->
+<div class="overlay" id="mOverlay">
+  <div class="modal cut c1" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <button class="m-x" id="mClose" aria-label="Închide" data-cur><svg class="ic"><use href="#i-x"/></svg></button>
+    <div id="mForm">
+      <span class="m-eyebrow mono"><svg class="ic" style="width:12px;height:12px"><use href="#i-gem"/></svg> Rezervă un loc</span>
+      <h3 class="m-title" id="mTitle">Ședință de probă gratuită</h3>
+      <label class="fld"><span class="mono">NUMELE TĂU</span><input id="fName" type="text" placeholder="Ana Popescu" autocomplete="name"></label>
+      <label class="fld"><span class="mono">TELEFON SAU EMAIL</span><input id="fContact" type="text" placeholder="+40 … sau tu@mail.com" autocomplete="email"><em class="ferr mono" id="fErr"></em></label>
+      <button class="btn btn--volt cut" id="mSend" data-cur>Rezervă — ne vedem în sală</button>
+      <p class="m-note mono">Fără spam, fără contract — confirmăm doar locul tău. Preferi să scrii direct? <a href="https://www.facebook.com/DiamondFitnessClubSportiv/" target="_blank" rel="noopener">Mesaj pe Facebook</a>.</p>
+    </div>
+    <div id="mDone">
+      <div class="done-ic"><svg class="ic"><use href="#i-check"/></svg></div>
+      <h3 class="m-title" style="margin-bottom:12px">Mai e un pas.</h3>
+      <p class="m-note" style="margin-top:0">Datele tale sunt pregătite într-un email — trimite-l și îți confirmăm locul (<b id="mEcho" style="color:var(--ink)"></b>).</p>
+      <div class="m-actions">
+        <a class="btn btn--volt btn--sm cut" id="mMail" href="#" data-cur>Deschide aplicația de mail</a>
+        <a class="btn btn--ghost btn--sm" href="https://www.facebook.com/DiamondFitnessClubSportiv/" target="_blank" rel="noopener" data-cur>Mai bine pe Facebook</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* =====================================================================
+   EDITEAZĂ AICI — MEDIA DE PE FACEBOOK (două mecanisme)
+
+   1) FB_MEDIA — LIVE, ÎNCORPORATE. Linkurile publice pe care le-ai trimis
+      (1 fotografie + 6 reels) sunt afișate prin pluginurile oficiale
+      Facebook (post.php / video.php). Iframe-urile pornesc ÎNCĂRCAREA
+      imediat ce pagina se deschide — fără click. Condiție: publicațiile
+      trebuie să fie PUBLICE pe Facebook.
+
+   2) FB_GALLERY — ARHIVA „20 DE FAȚETE". Imagini găzduite local, cele mai
+      rapide și stabile. Descarcă pozele de pe pagina de Facebook, pune-le
+      în folderul /img de lângă acest fișier și setează src la
+      "img/fb-01.jpg" … "img/fb-20.jpg".
+      (Linkurile directe de CDN Facebook expiră — descărcarea e varianta sigură.)
+===================================================================== */
+const FB_URL = 'https://www.facebook.com/DiamondFitnessClubSportiv/';
+
+/* --- live: fotografia + reels-urile tale, în ordinea dată --- */
+const FB_MEDIA = [
+  { type:'photo', url:'https://www.facebook.com/photo/?fbid=1110943681461009', label:'FOTO' },
+  { type:'reel',  url:'https://www.facebook.com/reel/1633939450938145/',      label:'REEL' },
+  { type:'reel',  url:'https://www.facebook.com/reel/1241322397851833/',      label:'REEL' },
+  { type:'reel',  url:'https://www.facebook.com/reel/743915541864931/',       label:'REEL' },
+  { type:'reel',  url:'https://www.facebook.com/reel/769305492289761/',       label:'REEL' },
+  { type:'reel',  url:'https://www.facebook.com/reel/567504806438488/',       label:'REEL' },
+  { type:'reel',  url:'https://www.facebook.com/reel/1692196421335312/',      label:'REEL' }
+];
+
+/* --- arhiva: 20 de sloturi pentru poze descărcate local --- */
+const FB_GALLERY = [
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-01/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 01' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-02/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 02' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-03/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 03' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-04/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 04' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-05/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 05' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-06/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 06' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-07/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 07' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-08/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 08' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-09/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 09' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-10/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 10' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-11/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 11' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-12/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 12' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-13/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 13' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-14/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 14' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-15/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 15' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-16/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 16' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-17/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 17' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-18/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 18' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-19/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 19' },
+  { type:'img', src:'https://picsum.photos/seed/dg-fb-20/1000/1000.jpg', alt:'Diamond Fitness Club — fotografie din arhivă 20' }
+];
+
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const finePointer  = matchMedia('(hover:hover) and (pointer:fine)').matches;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pad2 = n => String(n).padStart(2,'0');
+
+/* ---------- helper: URL de încorporare oficială Facebook ---------- */
+function fbEmbed(item, w){
+  const href = encodeURIComponent(item.url.replace('web.facebook.com','www.facebook.com'));
+  return item.type === 'photo'
+    ? `https://www.facebook.com/plugins/post.php?href=${href}&show_text=false&width=${w}`
+    : `https://www.facebook.com/plugins/video.php?href=${href}&show_text=false&width=${w}&height=${Math.round(w*16/9)}`;
+}
+
+/* ---------- marquees: duplicăm jumătățile pentru buclă continuă ---------- */
+ $$('.mq-track').forEach(t => t.appendChild(t.firstElementChild.cloneNode(true)));
+
+/* ---------- stripul LIVE: iframes care se încarcă imediat la deschidere ---------- */
+const strip = $('#fbStrip');
+FB_MEDIA.forEach((m,i)=>{
+  const c = document.createElement('div');
+  c.className = `fb-card ${m.type==='reel' ? 'fb-card--reel' : 'fb-card--photo'} c${(i%4)+1}`;
+  c.setAttribute('role','button'); c.tabIndex = 0; c.setAttribute('data-cur','');
+  c.setAttribute('aria-label', `${m.type==='reel'?'Reel':'Fotografie'} de pe Facebook, ${i+1} din ${FB_MEDIA.length}`);
+  c.innerHTML = `
+    <iframe src="${fbEmbed(m, m.type==='reel' ? 320 : 560)}"
+            title="${m.type==='reel'?'Reel':'Fotografie'} Diamond Fitness Club ${i+1}"
+            scrolling="no" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+    <span class="fb-badge mono">${m.type==='reel' ? '<svg class="ic ic-f" style="width:9px;height:9px"><use href="#i-play"/></svg>' : '<svg class="ic ic-f" style="width:11px;height:11px"><use href="#i-fb"/></svg>'}${m.label} · ${pad2(i+1)}</span>`;
+  c.addEventListener('click', ()=>openLb(i, FB_MEDIA));
+  c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openLb(i, FB_MEDIA); } });
+  strip.appendChild(c);
+});
+
+/* ---------- arhiva: 20 de fațete (mozaic) ---------- */
+const SPANS = [[3,4],[1,2],[2,2],[2,2],[1,3],[3,2],[2,2],[1,2],[2,3],[3,2],
+               [1,2],[2,2],[2,2],[1,3],[3,2],[2,2],[1,2],[2,3],[3,2],[2,2]];
+const grid = $('#gGrid');
+FB_GALLERY.forEach((ph,i)=>{
+  const [w,h] = SPANS[i];
+  const f = document.createElement('figure');
+  f.className = `g-item gw${w} gh${h} c${(i%4)+1}`;
+  f.dataset.i = i; f.setAttribute('data-cur','');
+  f.innerHTML = `<img src="${ph.src}" alt="${ph.alt}" loading="${i>5?'lazy':'eager'}" decoding="async">
+                 <figcaption class="g-tag">ARHIVĂ · ${pad2(i+1)}</figcaption>`;
+  grid.appendChild(f);
+});
+
+/* ---------- lightbox: servește ambele colecții (live + arhivă) ---------- */
+const lb=$('#lb'), lbImg=$('#lbImg'), lbCnt=$('#lbCnt'), lbCap=$('#lbCap'),
+      lbEmb=$('#lbEmb'), lbFrame=$('#lbFrame');
+let lbI = 0, lbList = FB_MEDIA;
+function openLb(i, list){
+  lbList = list || lbList;
+  lbI = ((i % lbList.length) + lbList.length) % lbList.length;
+  const it = lbList[lbI];
+  lbCnt.textContent = `${pad2(lbI+1)} / ${pad2(lbList.length)}`;
+  if(it.type === 'img'){
+    lbEmb.classList.remove('on','lb-emb--reel','lb-emb--photo'); lbFrame.src = 'about:blank';
+    lbImg.style.display = ''; lbImg.src = it.src; lbImg.alt = it.alt;
+    lbCap.innerHTML = `Arhiva sălii — fotografia ${pad2(lbI+1)} din ${lbList.length}`;
+  } else {
+    lbImg.style.display = 'none';
+    lbEmb.classList.add('on');
+    lbEmb.classList.toggle('lb-emb--reel',  it.type==='reel');
+    lbEmb.classList.toggle('lb-emb--photo', it.type==='photo');
+    lbFrame.src = fbEmbed(it, it.type==='reel' ? 480 : 720);
+    lbCap.innerHTML = `${it.type==='reel'?'Reel':'Fotografie'} de pe Facebook · <a href="${it.url}" target="_blank" rel="noopener">Deschide pagina</a>`;
+  }
+  lb.classList.add('on'); document.body.classList.add('lock');
+  if(!reduceMotion && lb.animate)
+    lb.animate([{opacity:0},{opacity:1}],{duration:250,easing:'cubic-bezier(.16,1,.3,1)'});
+}
+function closeLb(){
+  lb.classList.remove('on'); document.body.classList.remove('lock');
+  lbFrame.src = 'about:blank'; /* oprește redarea video la închidere */
+}
+grid.addEventListener('click', e=>{ const it=e.target.closest('.g-item'); if(it) openLb(+it.dataset.i, FB_GALLERY); });
+ $('#lbClose').addEventListener('click', closeLb);
+ $('#lbPrev').addEventListener('click', ()=>openLb(lbI-1, lbList));
+ $('#lbNext').addEventListener('click', ()=>openLb(lbI+1, lbList));
+lb.addEventListener('click', e=>{ if(e.target===lb || e.target.classList.contains('lb-mid')) closeLb(); });
+
+/* ---------- antrenamente: previzualizare care urmărește cursorul + rezervare ---------- */
+const pf=$('#pfloat'), pfImg=pf.querySelector('img');
+if(finePointer && !reduceMotion){
+  let mx=innerWidth/2, my=innerHeight/2, px=mx, py=my;
+  addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
+  $$('.prow').forEach(r=>{
+    r.addEventListener('mouseenter', ()=>{ pfImg.src=r.dataset.img; pf.classList.add('on'); });
+    r.addEventListener('mouseleave', ()=>pf.classList.remove('on'));
+  });
+  (function follow(){ px+=(mx-px)*.14; py+=(my-py)*.14; pf.style.left=px+'px'; pf.style.top=py+'px'; requestAnimationFrame(follow); })();
+}
+addEventListener('load', ()=>$$('.prow').forEach(r=>{ const im=new Image(); im.src=r.dataset.img; }));
+
+/* ---------- hero: diamant 3D care se înclină + parallax pe imagine ---------- */
+const hero=$('.hero'), gemWrap=$('#gemWrap'), heroImg=$('#heroImg');
+if(finePointer && !reduceMotion && gemWrap){
+  hero.addEventListener('mousemove', e=>{
+    const r = hero.getBoundingClientRect();
+    const x = (e.clientX-r.left)/r.width - .5, y = (e.clientY-r.top)/r.height - .5;
+    gemWrap.style.transform = `rotateX(${(-y*14).toFixed(2)}deg) rotateY(${(x*18).toFixed(2)}deg)`;
+    heroImg.style.transform = `scale(1.07) translate(${(-x*12).toFixed(1)}px,${(-y*12).toFixed(1)}px)`;
+  });
+  hero.addEventListener('mouseleave', ()=>{ gemWrap.style.transform=''; heroImg.style.transform=''; });
+}
+
+/* ---------- cursor personalizat în formă de diamant ---------- */
+if(finePointer && !reduceMotion){
+  const dot=$('.cur-dot'), ring=$('.cur-ring');
+  let tx=0, ty=0, rx=0, ry=0;
+  addEventListener('mousemove', e=>{
+    tx=e.clientX; ty=e.clientY;
+    dot.style.opacity = ring.style.opacity = 1;
+    dot.style.transform = `translate(${tx}px,${ty}px) translate(-50%,-50%) rotate(45deg)`;
+  });
+  document.addEventListener('mouseover', e=>{
+    ring.classList.toggle('big', !!e.target.closest('a,button,[data-cur],.g-item,.fb-card'));
+  });
+  (function ringLoop(){ rx+=(tx-rx)*.16; ry+=(ty-ry)*.16;
+    ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%) rotate(45deg)`;
+    requestAnimationFrame(ringLoop); })();
+}
+
+/* ---------- revelații + contoare ---------- */
+const rio = new IntersectionObserver(es=>es.forEach(en=>{
+  if(en.isIntersecting){ en.target.classList.add('in'); rio.unobserve(en.target); }
+}),{threshold:.15, rootMargin:'0px 0px -40px 0px'});
+ $$('.rv').forEach(el=>rio.observe(el));
+
+function count(el){
+  const to=parseFloat(el.dataset.to), dec=+(el.dataset.dec||0), suf=el.dataset.suf||'';
+  const t0=performance.now(), dur=1600;
+  (function tick(t){
+    const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3);
+    el.textContent=(to*e).toFixed(dec)+suf;
+    if(p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+const cio = new IntersectionObserver(es=>es.forEach(en=>{
+  if(en.isIntersecting){ count(en.target); cio.unobserve(en.target); }
+}),{threshold:.6});
+ $$('.num').forEach(n=>cio.observe(n));
+
+/* ---------- nav: stare la scroll, progres, secțiunea activă ---------- */
+const nav=$('#nav'), prog=$('#prog');
+addEventListener('scroll', ()=>{
+  const y=scrollY, max=document.documentElement.scrollHeight-innerHeight;
+  nav.classList.toggle('scrolled', y>40);
+  prog.style.transform=`scaleX(${max>0 ? y/max : 0})`;
+},{passive:true});
+
+const aio = new IntersectionObserver(es=>es.forEach(en=>{
+  if(en.isIntersecting) $$('.nav-l a').forEach(a=>a.classList.toggle('act', a.getAttribute('href')==='#'+en.target.id));
+}),{rootMargin:'-35% 0px -60% 0px'});
+['club','training','gallery','schedule','join'].forEach(id=>{ const s=document.getElementById(id); if(s) aio.observe(s); });
+
+/* ---------- meniu mobil ---------- */
+const burger=$('#burger'), mmenu=$('#mmenu');
+function toggleMenu(force){
+  const on = force!==undefined ? force : !mmenu.classList.contains('on');
+  mmenu.classList.toggle('on', on); burger.classList.toggle('on', on);
+  burger.setAttribute('aria-expanded', on); document.body.classList.toggle('lock', on);
+}
+burger.addEventListener('click', ()=>toggleMenu());
+mmenu.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>toggleMenu(false)));
+
+/* ---------- stare deschis/închis în timp real + evidențierea zilei de azi ---------- */
+const HOURS=[[8,20],[6,23],[6,23],[6,23],[6,23],[6,23],[8,21]]; // index = getDay(), 0 = duminică
+const DAYN=['DUM','LUN','MAR','MIE','JOI','VIN','SÂM'];
+const fmtH=h=>pad2(h)+':00';
+function openState(){
+  const n=new Date(), d=n.getDay(), h=n.getHours()+n.getMinutes()/60, [o,c]=HOURS[d];
+  if(h>=o && h<c) return { open:true,  txt:`Deschis acum — se închide la ${fmtH(c)}` };
+  if(h<o)         return { open:false, txt:`Închis — se deschide azi la ${fmtH(o)}` };
+  const nd=(d+1)%7;
+  return { open:false, txt:`Închis — se deschide ${DAYN[nd]} la ${fmtH(HOURS[nd][0])}` };
+}
+function renderOpen(){
+  const s=openState();
+  [['openChip','openTxt'],['openChip2','openTxt2']].forEach(([c,t])=>{
+    const ce=$('#'+c); if(!ce) return;
+    ce.classList.toggle('open', s.open); $('#'+t).textContent=s.txt;
+  });
+  const today=new Date().getDay();
+  $$('.srow').forEach(r=>r.classList.toggle('today', r.dataset.days.split(',').includes(String(today))));
+}
+renderOpen(); setInterval(renderOpen, 60000);
+
+/* ---------- modal de rezervare ---------- */
+const mOverlay=$('#mOverlay'), mForm=$('#mForm'), mDone=$('#mDone'), mTitle=$('#mTitle'),
+      fName=$('#fName'), fContact=$('#fContact'), fErr=$('#fErr'), mMail=$('#mMail'), mEcho=$('#mEcho');
+let curPlan='Ședință de probă gratuită';
+function openModal(plan){
+  curPlan = plan || 'Ședință de probă gratuită';
+  mTitle.textContent = curPlan;
+  mForm.style.display=''; mDone.classList.remove('on');
+  fErr.textContent=''; fName.value=''; fContact.value='';
+  fName.classList.remove('bad'); fContact.classList.remove('bad');
+  mOverlay.classList.add('on'); document.body.classList.add('lock');
+  setTimeout(()=>fName.focus(), 300);
+}
+function closeModal(){ mOverlay.classList.remove('on'); document.body.classList.remove('lock'); }
+ $$('[data-plan]').forEach(el=>{
+  el.addEventListener('click', ()=>openModal(el.dataset.plan));
+  if(el.tagName!=='BUTTON' && el.tagName!=='A')
+    el.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openModal(el.dataset.plan); } });
+});
+ $('#mClose').addEventListener('click', closeModal);
+mOverlay.addEventListener('click', e=>{ if(e.target===mOverlay) closeModal(); });
+
+ $('#mSend').addEventListener('click', ()=>{
+  const name=fName.value.trim(), contact=fContact.value.trim();
+  const nameOk=name.length>=2;
+  const cOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact) || contact.replace(/\D/g,'').length>=7;
+  fName.classList.toggle('bad',!nameOk); fContact.classList.toggle('bad',!cOk);
+  if(!nameOk||!cOk){
+    fErr.textContent = !nameOk ? 'Spune-ne un nume la care să te strigăm în sală.' : 'Asta nu pare un număr de telefon sau un email.';
+    return;
+  }
+  mEcho.textContent = curPlan.toLowerCase();
+  const bodyTxt=`Salut Diamond Fitness Club,\n\nAș vrea să rezerv: ${curPlan}\nNume: ${name}\nContact: ${contact}\n\nTrimis de pe diamondgym.online`;
+  mMail.href=`mailto:hello@diamondgym.online?subject=${encodeURIComponent('Rezervare — '+curPlan)}&body=${encodeURIComponent(bodyTxt)}`;
+  mForm.style.display='none'; mDone.classList.add('on');
+  toast('Datele sunt salvate — trimite emailul pentru confirmare.');
+});
+
+/* ---------- toast ---------- */
+let tTimer;
+function toast(msg){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(tTimer); tTimer=setTimeout(()=>t.classList.remove('on'), 3400);
+}
+
+/* ---------- tastatură ---------- */
+addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    if(mOverlay.classList.contains('on')) closeModal();
+    else if(lb.classList.contains('on')) closeLb();
+    else if(mmenu.classList.contains('on')) toggleMenu(false);
+  }
+  if(lb.classList.contains('on')){
+    if(e.key==='ArrowRight') openLb(lbI+1, lbList);
+    if(e.key==='ArrowLeft')  openLb(lbI-1, lbList);
+  }
+});
+
+/* ---------- footer ---------- */
+ $('#yr').textContent = new Date().getFullYear();
+ $('#toTop').addEventListener('click', ()=>scrollTo({top:0, behavior:reduceMotion?'auto':'smooth'}));
+ $('#toTop').addEventListener('keydown', e=>{ if(e.key==='Enter') scrollTo({top:0, behavior:reduceMotion?'auto':'smooth'}); });
+
+/* OPȚIONAL — deschide automat fotografia de pe Facebook la intrarea pe site:
+   openLb(0, FB_MEDIA);
+   (nu e activată din start: browserele blochează pop-up-urile și e o experiență
+   agresivă — mai bine media e deja vizibilă în pagină, cum e acum) */
+</script>
+</body>
+</html>
